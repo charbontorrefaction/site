@@ -1,0 +1,874 @@
+@font-face {
+    font-family: Aja;
+    src: url('../fonts/Aja.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: Arial-Grotesk-Regular;
+    src: url('../fonts/Arial-Grotesk-Regular.otf') format("opentype");
+}
+
+@font-face {
+    font-family: Arial-Grotesk-Medium;
+    src: url('../fonts/Arial-Grotesk-Medium.otf') format("opentype");
+}
+
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #AE95DA;
+    font-family: Arial-Grotesk-Regular;
+}
+
+h1 {
+    font-family: Arial-Grotesk-Regular;
+    color: #502C1E;
+    font-size: 46px;
+    margin: 0;
+    padding-bottom: 10px;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+}
+
+p {
+    margin: 0;
+    letter-spacing: -0.03em;
+}
+
+button {
+    appearance: none;
+}
+
+#restart-btn {
+    background-color: #502C1E;
+    color: #ffffff;
+    font-family: Arial-Grotesk-Regular;
+    font-weight: 400;
+    font-size: 46px;
+    padding: 20px 100px 20px 100px;
+    border: none;
+    border-radius: 100px;
+    transition: 0.05s;
+}
+
+#final-score {
+    font-family: Arial-Grotesk-Regular;
+    font-size: 92px;
+    padding: 20px;
+}
+
+a {
+    text-decoration: none;
+    color: #502C1E;
+    cursor: pointer; /* Assure le changement de curseur sur les liens */
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.info-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 0;
+    z-index: 10;
+    letter-spacing: -0.05em;
+    line-height: 1.1;
+}
+
+.info-block {
+    text-align: left;
+    color: #502C1E !important;
+    font-size: 28px;
+    padding: 20px;
+    position: relative;
+    z-index: 11;
+}
+
+#push {
+    margin-left: auto;
+}
+
+#separator {
+    padding-left: 100px;
+    padding-right: 100px;
+}
+
+.aja {
+    font-family: Aja !important;
+    -webkit-text-stroke: 1px #502C1E;
+    font-size: 32px;
+    letter-spacing: 0.03em;
+}
+
+.game-container {
+    position: absolute;
+    right: 20px;
+    left: 20px;
+    width: calc(100% - 40px);
+    height: calc(100% - 20px);
+    overflow: hidden;
+}
+
+.can {
+    position: absolute;
+    bottom: 0;
+    width: 20%;
+    aspect-ratio: 1 / 1.05;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 5;
+}
+
+.grain {
+    position: absolute;
+    width: var(--grain-size, 20px);
+    height: var(--grain-size, 14px);
+    background: url('../asset/GRAIN_CAFE_WEB.png') no-repeat center/contain;
+    z-index: 15;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.rotate-slow {
+    animation: rotate 6s linear infinite;
+}
+
+.rotate-medium {
+    animation: rotate 4s linear infinite;
+}
+
+.rotate-fast {
+    animation: rotate 2s linear infinite;
+}
+
+#lives {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+#score {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 46px;
+    font-family: Arial-Grotesk-Regular;
+    color: #502C1E;
+}
+
+.hidden {
+    display: none;
+}
+
+#game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 24px;
+    background-color: #ffffff;
+    color: #502C1E;
+    padding: 35px;
+    border-radius: 95px;
+    z-index: 20;
+}
+
+#game-over p {
+    margin: 0;
+}
+
+.life-icon {
+    width: 40px; /* Taille des icônes */
+    height: auto; /* Conserver le ratio de l'image */
+    margin-right: 10px; /* Espacement entre les icônes */
+}
+
+/* Styles pour la fenêtre pop-up */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fond semi-transparent */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 30;
+}
+
+.popup-content {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color: #fff;
+    color: #502C1E;
+    padding: 50px;
+    border-radius: 100px;
+    width: 80%;
+    max-width: 1500px;
+    position: relative;
+    text-align: center;
+    letter-spacing: -0.03em;
+}
+
+.poptitle {
+    display: flex;
+    flex-basis: 30%;
+    text-align: left;
+    font-size: 26px;
+    line-height: 1.2;
+}
+
+.poptext {
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: 65%;
+    margin-left: auto;
+    text-align: left;
+}
+
+.popup-buttons {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    gap: 50px;
+}
+
+.popbutton {
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: 100%;
+    justify-content: center;
+    background-color: #502C1E;
+    color: #fff;
+    border-radius: 100px;
+    padding: 30px;
+    margin-top: 50px;
+    transition: .05s;
+}
+
+.button-title {
+    flex-basis: 100%;
+    font-size: 36px;
+}
+
+.button-subtitle {
+    flex-basis: 100%;
+    font-size: 22px;
+}
+
+.subtitle {
+    line-height: 1.2;
+    font-size: 26px;
+    flex-basis: 100%;
+    margin-bottom: 25px;
+}
+
+.text {
+    font-size: 22px;
+    flex-basis: 100%;
+}
+
+#textmargin {
+    padding-bottom: 25px;
+}
+
+.poplogos {
+    display: flex;
+    flex-basis: 65%;
+    margin-left: 35%;
+    text-align: left;
+    padding: 25px 35% 50px 0px;
+    align-items: center;
+}
+
+#logo-sca {
+    height: 110px;
+}
+
+#logo-slowfood {
+    height: 75px;
+    margin-left: 60px;
+}
+
+.close {
+    position: absolute;
+    top: 30px;
+    right: 50px;
+    font-size: 50px;
+    cursor: pointer;
+    color: #502C1E;
+}
+
+.popup.hidden {
+    display: none;
+}
+
+.popup-buttons a:hover {
+    text-decoration: none;
+    background-color: #AE95DA;
+    color: #502C1E;
+    outline: solid 5px #502C1E;
+    outline-offset: -5px;
+}
+
+#restart-btn:hover {
+    text-decoration: none;
+    background-color: #AE95DA;
+    color: #502C1E;
+    outline: solid 5px #502C1E;
+    outline-offset: -5px;
+}
+
+
+
+@media (max-width: 480px) {
+    .info-block {
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    .aja {
+        font-size: 18px;
+    }
+
+    .info-container {
+        flex-direction: column;
+        display: flex;
+        align-items: flex-start;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 0;
+        z-index: 10;
+        letter-spacing: -0.05em;
+        line-height: 1.1;
+    }
+
+    #push {
+        margin-left: 0;
+    }
+    
+    #separator {
+        padding: 0px 10px 0px 10px;
+    }
+
+    .game-container {
+        right: 10px;
+        left: 10px;
+        width: calc(100% - 20px);
+        height: calc(100% - 10px);
+    }
+
+    #game-over {
+        font-size: 14px;
+        padding: 20px;
+        border-radius: 45px;
+    }
+
+    #final-score {
+        font-size: 52px;
+        padding: 5px;
+    }
+
+    #restart-btn {
+        font-size: 16px;
+        padding: 10px 40px 10px 40px;
+    }
+
+    h1 {
+        font-size: 16px;
+        padding-bottom: 3px;
+    }
+
+    .life-icon {
+        width: 15px; /* Taille des icônes */
+        margin-right: 3px; /* Espacement entre les icônes */
+    }
+    
+    #score {
+        font-size: 16px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+    }
+
+    .poptitle {
+        font-size: 14px;
+        flex-basis: 100%;
+        margin-bottom: 10px;
+    }
+
+    .text {
+        font-size: 10px;
+    }
+    
+    .poptext {
+        flex-basis: 100%;
+    }
+
+    .poplogos {
+        flex-basis: 100%;
+        padding: 10px 0px 20px 0px;
+        margin: 0;
+    }
+    
+    #logo-sca {
+        height: 50px;
+    }
+    
+    #logo-slowfood {
+        height: 35px;
+        margin-left: 20px;
+    }
+
+    .popup-content {
+        padding: 20px;
+        border-radius: 30px;
+        width: 95%;
+    }
+
+    #textmargin {
+        padding-bottom: 10px;
+    }
+
+    .subtitle {
+        margin-bottom: 10px;
+    }
+
+    .close {
+        top: 10px;
+        right: 20px;
+        font-size: 30px;
+    }
+
+    .button-title {
+        font-size: 14px;
+    }
+    
+    .button-subtitle {
+        font-size: 10px;
+    }
+
+    .popup-buttons {
+        gap: 10px;
+    }
+
+    .popbutton {
+        margin-top: 20px;
+        padding: 15px;
+    }
+
+    .popup-buttons a:hover {
+        outline: solid 2px #502C1E;
+        outline-offset: -2px;
+    }
+
+    #restart-btn:hover {
+        outline: solid 2px #502C1E;
+        outline-offset: -2px;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .info-block {
+        font-size: 18px;
+        padding: 10px;
+    }
+
+    .aja {
+        font-size: 20px;
+    }
+
+    .info-container {
+        flex-direction: column;
+        display: flex;
+        align-items: flex-start;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 0;
+        z-index: 10;
+        letter-spacing: -0.05em;
+        line-height: 1.1;
+    }
+
+    #push {
+        margin-left: 0;
+    }
+    
+    #separator {
+        padding: 0px 10px 0px 10px;
+    }
+
+    .game-container {
+        right: 10px;
+        left: 10px;
+        width: calc(100% - 20px);
+        height: calc(100% - 10px);
+    }
+
+    #game-over {
+        font-size: 14px;
+        padding: 20px;
+        border-radius: 45px;
+    }
+
+    #final-score {
+        font-size: 52px;
+        padding: 10px;
+    }
+
+    #restart-btn {
+        font-size: 18px;
+        padding: 10px 50px 10px 50px;
+    }
+
+    h1 {
+        font-size: 18px;
+        padding-bottom: 3px;
+    }
+
+    .life-icon {
+        width: 17px; /* Taille des icônes */
+        margin-right: 5px; /* Espacement entre les icônes */
+    }
+    
+    #score {
+        font-size: 18px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+    }
+
+    .poptitle {
+        font-size: 14px;
+        flex-basis: 100%;
+        margin-bottom: 10px;
+    }
+
+    .text {
+        font-size: 10px;
+    }
+    
+    .poptext {
+        flex-basis: 100%;
+    }
+
+    .poplogos {
+        flex-basis: 100%;
+        padding: 10px 0px 20px 0px;
+        margin: 0;
+    }
+    
+    #logo-sca {
+        height: 50px;
+    }
+    
+    #logo-slowfood {
+        height: 35px;
+        margin-left: 20px;
+    }
+
+    .popup-content {
+        padding: 30px;
+        border-radius: 40px;
+        width: 95%;
+    }
+
+    #textmargin {
+        padding-bottom: 10px;
+    }
+
+    .subtitle {
+        margin-bottom: 10px;
+    }
+
+    .close {
+        top: 10px;
+        right: 20px;
+        font-size: 30px;
+    }
+
+    .button-title {
+        font-size: 14px;
+    }
+    
+    .button-subtitle {
+        font-size: 10px;
+    }
+
+    .popup-buttons {
+        gap: 10px;
+    }
+
+    .popbutton {
+        margin-top: 30px;
+        padding: 20px;
+    }
+
+    .popup-buttons a:hover {
+        outline: solid 2px #502C1E;
+        outline-offset: -2px;
+    }
+
+    #restart-btn:hover {
+        outline: solid 2px #502C1E;
+        outline-offset: -2px;
+    }
+}
+
+
+@media (min-width: 769px) and (max-width: 1200px) {
+    .info-block {
+        font-size: 24px;
+    }
+
+    .aja {
+        font-size: 28px;
+    }
+
+    #game-over {
+        font-size: 20px;
+        padding: 25px;
+        border-radius: 55px;
+    }
+
+    #final-score {
+        font-size: 72px;
+        padding: 20px;
+    }
+
+    #restart-btn {
+        font-size: 24px;
+        padding: 10px 60px 10px 60px;
+    }
+
+    h1 {
+        font-size: 24px;
+        padding-bottom: 10px;
+    }
+
+    #separator {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .life-icon {
+        width: 22px; /* Taille des icônes */
+        margin-right: 5px; /* Espacement entre les icônes */
+    }
+    
+    #score {
+        font-size: 24px;
+    }
+
+    .subtitle {
+        font-size: 24px;
+    }
+
+    .poptitle {
+        font-size: 24px;
+    }
+
+    .text {
+        font-size: 18px;
+    }
+
+    .popup-content {
+        padding: 40px;
+        border-radius: 50px;
+        width: 90%;
+    }
+
+    .close {
+        top: 20px;
+        right: 30px;
+        font-size: 35px;
+    }
+
+    #logo-sca {
+        height: 70px;
+    }
+    
+    #logo-slowfood {
+        height: 55px;
+    }
+
+    .poplogos {
+        display: flex;
+        flex-basis: 65%;
+        margin-left: 35%;
+        text-align: left;
+        padding: 15px 35% 40px 0px;
+        align-items: center;
+    }
+
+    .button-title {
+        font-size: 24px;
+    }
+    
+    .button-subtitle {
+        font-size: 18px;
+    }
+
+    .popup-buttons {
+        gap: 30px;
+    }
+
+    .popbutton {
+        margin-top: 40px;
+    }
+
+    .popup-buttons a:hover {
+        outline: solid 3px #502C1E;
+        outline-offset: -3px;
+    }
+
+    #restart-btn:hover {
+        outline: solid 3px #502C1E;
+        outline-offset: -3px;
+    }
+}
+
+@media (min-width: 1201px) and (max-width: 2400px) {
+
+    .close {
+        top: 30px;
+        right: 40px;
+        font-size: 35px;
+    }
+
+    .info-block {
+        font-size: 32px;
+    }
+
+    .aja {
+        font-size: 37px;
+    }
+
+    #game-over {
+        font-size: 22px;
+        padding: 30px;
+        border-radius: 80px;
+    }
+
+    #final-score {
+        font-size: 80px;
+        padding: 20px;
+    }
+
+    #restart-btn {
+        font-size: 32px;
+        padding: 15px 80px 15px 80px;
+    }
+
+    h1 {
+        font-size: 32px;
+        padding-bottom: 10px;
+    }
+
+    #separator {
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+
+    .life-icon {
+        width: 30px; /* Taille des icônes */
+        margin-right: 5px; /* Espacement entre les icônes */
+    }
+    
+    #score {
+        font-size: 32px;
+    }
+
+    #about {
+        padding-left: 50px;
+    }
+
+    .subtitle {
+        font-size: 24px;
+    }
+
+    .poptitle {
+        font-size: 24px;
+    }
+
+    .text {
+        font-size: 20px;
+    }
+
+    .button-title {
+        font-size: 24px;
+    }
+    
+    .button-subtitle {
+        font-size: 20px;
+    }
+
+    .popup-buttons {
+        gap: 60px;
+    }
+
+    .popbutton {
+        margin-top: 50px;
+    }
+
+    .popup-buttons a:hover {
+        outline: solid 4px #502C1E;
+        outline-offset: -4px;
+    }
+
+    #restart-btn:hover {
+        outline: solid 4px #502C1E;
+        outline-offset: -4px;
+    }
+
+    .popup-content {
+        padding: 50px;
+    }
+
+    
+}
+
+@media (min-width: 2401px) {
+    .info-block {
+        font-size: 46px;
+    }
+
+    .aja {
+        font-size: 52px;
+        -webkit-text-stroke: 1.5px #502C1E;
+    }
+
+    #separator {
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+
+    #about {
+        padding-left: 100px;
+    }
+}
